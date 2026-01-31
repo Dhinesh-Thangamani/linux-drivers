@@ -108,7 +108,7 @@ static void __exit l1c_exit(void) {
 }
 
 module_init(l1c_init);
-module_init(l1c_exit);
+module_exit(l1c_exit);
 
 MODULE_AUTHOR("Dhinesh Thangamani")
 MODULE_DESCRIPTION("ACPI Device Driver to Handler SCI Event")

@@ -28,7 +28,7 @@ static irqreturn_t msi_irq_handler(int irq, void *dev_id)
     return IRQ_HANDLED;
 }
 
-static int my_probe(struct pci_dev *pdev,
+static int msi_probe(struct pci_dev *pdev,
                     const struct pci_device_id *id)
 {
     int ret;

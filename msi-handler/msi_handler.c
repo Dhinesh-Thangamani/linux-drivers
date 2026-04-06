@@ -39,6 +39,7 @@ static int msi_probe(struct pci_dev *pdev,
 
     pci_set_master(pdev);
 
+	dev_info(&pdev->dev, "About to enable MSI\n"
     /* Enable MSI */
     ret = pci_enable_msi(pdev);
     if (ret) {

@@ -28,11 +28,10 @@ static irqreturn_t msi_irq_handler(int irq, void *dev_id)
     return IRQ_HANDLED;
 }
 
-static int msi_probe(struct pci_dev *pdev,
-                     const struct pci_device_id *id)
+static int my_probe(struct pci_dev *pdev,
+                    const struct pci_device_id *id)
 {
     int ret;
-    int irq;
 
     ret = pci_enable_device(pdev);
     if (ret)
@@ -40,34 +39,27 @@ static int msi_probe(struct pci_dev *pdev,
 
     pci_set_master(pdev);
 
-    /* Enable a single MSI vector */
+    /* Enable MSI */
     ret = pci_enable_msi(pdev);
     if (ret) {
         dev_err(&pdev->dev, "Failed to enable MSI\n");
         goto err_disable;
     }
 
-    irq = pdev->irq;
-
-    ret = request_irq(irq,
-                      msi_irq_handler,
-                      0,              /* MSI is not shared */
-                      DRV_NAME,
-                      pdev);
+    ret = request_irq(pdev->irq, my_isr,
+                      0, "my_msi", pdev);
     if (ret) {
-        dev_err(&pdev->dev, "request_irq failed\n");
-        goto err_msi;
+        pci_disable_msi(pdev);
+        goto err_disable;
     }
 
-    dev_info(&pdev->dev, "MSI enabled, irq=%d\n", irq);
     return 0;
 
-err_msi:
-    pci_disable_msi(pdev);
 err_disable:
     pci_disable_device(pdev);
     return ret;
 }
+
 
 static void msi_remove(struct pci_dev *pdev)
 {

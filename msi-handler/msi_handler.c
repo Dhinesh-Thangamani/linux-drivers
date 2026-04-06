@@ -46,10 +46,11 @@ static int my_probe(struct pci_dev *pdev,
         goto err_disable;
     }
 
-    ret = request_irq(pdev->irq, my_isr,
+    ret = request_irq(pdev->irq, msi_irq_handler,
                       0, "my_msi", pdev);
     if (ret) {
         pci_disable_msi(pdev);
+		dev_err(&pdev->dev, "irq request failed\n");
         goto err_disable;
     }
 

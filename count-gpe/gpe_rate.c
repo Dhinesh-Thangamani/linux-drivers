@@ -101,17 +101,17 @@ struct enum_ctx {
     struct dir_context ctx;
 };
 
-static int enum_actor(struct dir_context *ctx, const char *name, int namlen,
+static bool enum_actor(struct dir_context *ctx, const char *name, int namlen,
               loff_t offset, u64 ino, unsigned int d_type)
 {
     struct gpe_entry *e;
 
     if (!is_gpe_filename(name, namlen))
-        return 0;
+        return true;
 
     e = kzalloc(sizeof(*e), GFP_KERNEL);
     if (!e)
-        return -ENOMEM;
+        return false;
 
     snprintf(e->name, sizeof(e->name), "%.*s", namlen, name);
     snprintf(e->path, sizeof(e->path), "%s/%s", ACPI_INTR_DIR, e->name);
@@ -123,7 +123,7 @@ static int enum_actor(struct dir_context *ctx, const char *name, int namlen,
     list_add_tail(&e->list, &gpe_list);
     mutex_unlock(&gpe_lock);
 
-    return 0;
+    return true;
 }
 
 static int enumerate_gpes(void)

@@ -1,0 +1,8 @@
+make
+sudo insmod gpe_rate.ko interval_ms=1000
+
+# ensure debugfs is mounted
+sudo mount -t debugfs none /sys/kernel/debug 2>/dev/null || true
+
+cat /sys/kernel/debug/gpe_rate/gpe_rates
+``

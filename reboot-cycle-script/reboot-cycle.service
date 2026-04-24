@@ -1,5 +1,3 @@
-
-//paste the following lines
 [Unit]
 Description=Automated Reboot Cycle Counter
 After=multi-user.target

@@ -1,25 +1,31 @@
+#!/bin/bash
+set -e
+
+# Create directory
 sudo mkdir -p /opt/reboot-cycle
 
-//copy reboot_cycle.sh to /opt/reboot-cycle/
-// Change to executable
+# Copy reboot script
+sudo cp reboot_cycle.sh /opt/reboot-cycle/
+
+# Make the script executable
 sudo chmod +x /opt/reboot-cycle/reboot_cycle.sh
 
-// create systemd service
-//sudo nano /etc/systemd/system/reboot-cycle.service
-//copy the file reboot-cycle.service to /etc/systemd/system/
-// Reload the system
+# Copy systemd service file
+sudo cp reboot-cycle.service /etc/systemd/system/
+
+# Reload systemd
 sudo systemctl daemon-reload
 
-// Enable
+# Enable the service
 sudo systemctl enable reboot-cycle.service
 
-// Start the reboot cycle
+# Start the reboot cycle service
 sudo systemctl start reboot-cycle.service
 
-// Count check
-cat /opt/reboot-cycle/count
+# Optional checks
+echo "Reboot cycle setup complete."
+echo "Count (if exists):"
+sudo cat /opt/reboot-cycle/count 2>/dev/null || echo "Count file not found."
 
-// Log Check
-cat /opt/reboot-cycle/reboot.log
-
-
+echo "Log (if exists):"
+sudo cat /opt/reboot-cycle/reboot.log 2>/dev/null || echo "Log file not found."

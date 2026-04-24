@@ -1,0 +1,13 @@
+
+//paste the following lines
+[Unit]
+Description=Automated Reboot Cycle Counter
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/reboot-cycle/reboot_cycle.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target

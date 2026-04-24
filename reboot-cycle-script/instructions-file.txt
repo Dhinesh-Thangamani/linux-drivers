@@ -1,57 +1,12 @@
 sudo mkdir -p /opt/reboot-cycle
 
-sudo nano /opt/reboot-cycle/reboot_cycle.sh
-
-// Bash file
-#!/bin/bash
-
-STATE_FILE="/opt/reboot-cycle/count"
-LOG_FILE="/opt/reboot-cycle/reboot.log"
-MAX_CYCLES=0   # 0 = infinite cycles
-
-# Initialize counter if missing
-if [ ! -f "$STATE_FILE" ]; then
-    echo 0 > "$STATE_FILE"
-fi
-
-COUNT=$(cat "$STATE_FILE")
-COUNT=$((COUNT + 1))
-
-echo "$COUNT" > "$STATE_FILE"
-echo "$(date '+%F %T') : reboot cycle $COUNT" >> "$LOG_FILE"
-
-# Stop after MAX_CYCLES if set
-if [ "$MAX_CYCLES" -ne 0 ] && [ "$COUNT" -ge "$MAX_CYCLES" ]; then
-    echo "$(date '+%F %T') : reached max cycles, stopping" >> "$LOG_FILE"
-    exit 0
-fi
-
-# Small delay to ensure filesystem sync
-sleep 5
-
-# Cold reboot
-/sbin/reboot -f
-
+//copy reboot_cycle.sh to /opt/reboot-cycle/
 // Change to executable
 sudo chmod +x /opt/reboot-cycle/reboot_cycle.sh
 
 // create systemd service
-sudo nano /etc/systemd/system/reboot-cycle.service
-
-
-//paste the following lines
-[Unit]
-Description=Automated Reboot Cycle Counter
-After=multi-user.target
-
-[Service]
-Type=oneshot
-ExecStart=/opt/reboot-cycle/reboot_cycle.sh
-RemainAfterExit=no
-
-[Install]
-WantedBy=multi-user.target
-
+//sudo nano /etc/systemd/system/reboot-cycle.service
+//copy the file reboot-cycle.service to /etc/systemd/system/
 // Reload the system
 sudo systemctl daemon-reload
 

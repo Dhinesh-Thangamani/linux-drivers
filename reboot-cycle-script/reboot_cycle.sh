@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 STATE_FILE="/opt/reboot-cycle/count"
 LOG_FILE="/opt/reboot-cycle/reboot.log"
